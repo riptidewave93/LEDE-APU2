@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+# Copyright (C) 2016 OpenWrt.org
+#
+
+. /lib/functions/system.sh
+. /lib/functions/uci-defaults.sh
+
+board_config_update
+
+ucidef_set_interfaces_lan_wan "eth1" "eth0"
+
+board_config_flush
+
+exit 0
