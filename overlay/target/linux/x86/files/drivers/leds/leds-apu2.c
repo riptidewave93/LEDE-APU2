@@ -1,5 +1,8 @@
 /*
- *  gpio-apu2.c - AMD FCH GPIO support for PC-Engines APU-2 board
+ *  APU2 LED/GPIO Driver
+ *  Copyright (c) 2016 Christian Lamparter <chunkeey (at) googlemail.com>
+ *
+ *  Based on gpio-apu2.c - AMD FCH GPIO support for PC-Engines APU-2 board
  *
  *  Copyright (c) 2015  Carsten Spiess <fli4l at carsten-spiess.de>
  *
@@ -30,6 +33,10 @@
 #include <linux/io.h>
 #include <linux/version.h>
 
+#include <linux/leds.h>
+#include <linux/input.h>
+#include <linux/gpio_keys.h>
+
 #define DEVNAME                 "gpio-apu2"
 
 #define FCH_ACPI_MMIO_BASE      0xFED80000
@@ -48,6 +55,8 @@ static DEFINE_SPINLOCK ( gpio_lock);
 
 /* the watchdog platform device */
 static struct platform_device *gpio_apu2_platform_device;
+static struct platform_device *leddev;
+static struct platform_device *keydev;
 
 static const struct pci_device_id gpio_apu2_pci_tbl[] ={
 	{PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_HUDSON2_SMBUS, PCI_ANY_ID, PCI_ANY_ID},
@@ -213,6 +222,93 @@ static struct platform_driver gpio_apu2_driver = {
 	}
 };
 
+static struct gpio_led apu2_leds_gpio[] = {
+        {
+                .name           = "apu2:green:power",
+                .gpio           = 1,
+                .active_low     = 0,
+        },
+        {
+                .name           = "apu2:green:led2",
+                .gpio           = 2,
+                .active_low     = 0,
+        },
+        {
+                .name           = "apu2:green:led3",
+                .gpio           = 3,
+                .active_low     = 0,
+        },
+};
+
+static struct gpio_keys_button apu2_gpio_keys[] = {
+   {
+       .desc           = "Reset button",
+       .type           = EV_KEY,
+       .code           = KEY_RESTART,
+       .debounce_interval = 60,
+       .gpio           = 0,
+       .active_low     = 1,
+   },
+};
+
+static void register_gpio_keys_polled(int id, unsigned poll_interval,
+                     unsigned nbuttons,
+                     struct gpio_keys_button *buttons)
+{
+   static struct gpio_keys_platform_data pdata = {
+       .poll_interval = poll_interval,
+       .nbuttons = nbuttons,
+       .buttons = buttons,
+   };
+   int err;
+
+   keydev = platform_device_alloc("gpio-keys-polled", id);
+   if (!keydev)
+       return;
+
+   err = platform_device_add_data(keydev, &pdata, sizeof(pdata));
+   if (err)
+       goto err_put_pdev;
+
+   err = platform_device_add(pdev);
+   if (err)
+       goto err_put_pdev;
+
+   return;
+
+err_put_pdev:
+   platform_device_put(keydev);
+   keydev = NULL;
+}
+
+static void register_leds_gpio(int id, unsigned num_leds, struct gpio_led *leds)
+{
+   static struct gpio_led_platform_data pdata = {
+       .num_leds = num_leds,
+       .leds = leds,
+   };
+   struct gpio_led *p;
+   int err;
+
+   leddev = platform_device_alloc("leds-gpio", id);
+   if (!leddev)
+       return
+
+   err = platform_device_add_data(leddev, &pdata, sizeof(pdata));
+   if (err)
+       goto err_put_pdev;
+
+   err = platform_device_add(pdev);
+   if (err)
+       goto err_put_pdev;
+
+   return;
+
+err_put_pdev:
+   platform_device_put(leddev);
+   leddev = NULL;
+}
+
 static int __init gpio_apu2_init (void)
 {
 	int err;
@@ -230,6 +326,9 @@ static int __init gpio_apu2_init (void)
 	}
 
 	pr_info ("APU-2 GPIO driver module loaded\n");
+
+    register_leds_gpio(-1, ARRAY_SIZE(apu2_leds_gpio), apu2_leds_gpio);
+    register_gpio_keys_polled(-1, 20, ARRAY_SIZE(apu2_gpio_keys), apu2_gpio_keys);
 	return 0;
 
 exit_driver:
@@ -241,6 +340,8 @@ exit:
 static void __exit gpio_apu2_exit (void)
 {
 	platform_device_unregister (gpio_apu2_platform_device);
+    platform_device_unregister (leddev);
+    platform_device_unregister (keydev);
 	platform_driver_unregister (&gpio_apu2_driver);
 	pr_info ("APU-2 GPIO driver module unloaded\n");
 }

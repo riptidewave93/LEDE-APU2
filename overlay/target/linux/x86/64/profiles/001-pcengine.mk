@@ -10,6 +10,7 @@ define Profile/APU2
   PACKAGES:=kmod-igb hwclock kmod-button-hotplug kmod-i2c-core \
   	kmod-i2c-piix4 kmod-usb-core kmod-usb-ohci kmod-usb2 kmod-usb3 \
   	kmod-ath9k kmod-ath10k wpad-mini kmod-hwmon-core kmod-hwmon-k10temp \
+	kmod-leds-gpio kmod-gpio-button-hotplug \
   	libsensors lm-sensors
 endef
 
