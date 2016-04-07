@@ -9,9 +9,9 @@
 +	depends on LEDS_CLASS
 +	depends on GPIOLIB
 +	help
-+	  This option enables support for the CPU GPIO pins on the PCEngines APU2 board.
-+	  Note this driver still needs to be modified to use the LED class, so until then
-+	  manual GPIO control only.
++	  This option enables support for the CPU GPIO pins on the PCEngines
++	  APU2 board, as well as adds system support for the reset button and
++	  front panel LEDs.
 +
  config LEDS_COBALT_QUBE
 	tristate "LED Support for the Cobalt Qube series front LED"

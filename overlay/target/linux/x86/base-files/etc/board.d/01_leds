@@ -3,7 +3,6 @@
 # Copyright (C) 2016 OpenWrt.org
 #
 
-. /lib/functions/system.sh
 . /lib/functions/uci-defaults.sh
 . /lib/x86.sh
 
@@ -13,10 +12,8 @@ board=$(x86_board_name)
 
 case "$board" in
 apu2)
-	ucidef_set_interfaces_lan_wan "eth1" "eth0"
-	;;
-*)
-	ucidef_set_interfaces_lan_wan "eth1" "eth0"
+	ucidef_set_led_wlan "wlan1" "WLAN1" "apu2:green:led2" "phy0tpt"
+	ucidef_set_led_wlan "wlan2" "WLAN2" "apu2:green:led3" "phy1tpt"
 	;;
 esac
 

@@ -20,7 +20,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-
+ 
  #include <linux/module.h>
  #include <linux/types.h>
  #include <linux/miscdevice.h>
@@ -223,19 +223,19 @@
 
  static struct gpio_led apu2_leds_gpio[] = {
          {
-                 .name           = "apu2:white:power",
-                 .gpio           = 1,
-                 .active_low     = 0,
+                 .name           = "apu2:green:power",
+                 .gpio           = 509,
+                 .active_low     = 1,
          },
          {
-                 .name           = "apu2:led2:power",
-                 .gpio           = 2,
-                 .active_low     = 0,
+                 .name           = "apu2:green:led2",
+                 .gpio           = 510,
+                 .active_low     = 1,
          },
          {
-                 .name           = "apu2:led3:power",
-                 .gpio           = 3,
-                 .active_low     = 0,
+                 .name           = "apu2:green:led3",
+                 .gpio           = 511,
+                 .active_low     = 1,
          },
  };
 
@@ -245,7 +245,7 @@
  		.type           = EV_KEY,
  		.code           = KEY_RESTART,
  		.debounce_interval = 60,
- 		.gpio           = 0,
+ 		.gpio           = 508,
  		.active_low     = 1,
  	},
  };
@@ -258,20 +258,26 @@
  	int err;
 
  	keydev = platform_device_alloc("gpio-keys-polled", id);
- 	if (!keydev)
+ 	if (!keydev) {
+ 		printk(KERN_ERR "Failed to allocate gpio-keys platform device\n");
  		return;
+ 	}
 
  	pdata.poll_interval = poll_interval;
  	pdata.nbuttons = nbuttons;
  	pdata.buttons = buttons;
 
  	err = platform_device_add_data(keydev, &pdata, sizeof(pdata));
- 	if (err)
+ 	if (err) {
+ 		dev_err(&keydev->dev, "failed to add platform data to key driver (%d)", err);
  		goto err_put_pdev;
+ 	}
 
  	err = platform_device_add(keydev);
- 	if (err)
+ 	if (err) {
+ 		dev_err(&keydev->dev, "failed to register key platform device (%d)", err);
  		goto err_put_pdev;
+ 	}
 
  	return;
 
@@ -286,19 +292,25 @@
  	int err;
 
  	leddev = platform_device_alloc("leds-gpio", id);
- 	if (!leddev)
+ 	if (!leddev) {
+ 		printk(KERN_ERR "Failed to allocate leds-gpio platform device\n");
  		return;
+ 	}
 
  	pdata.num_leds = num_leds;
  	pdata.leds = leds;
 
  	err = platform_device_add_data(leddev, &pdata, sizeof(pdata));
- 	if (err)
+ 	if (err) {
+ 		dev_err(&leddev->dev, "failed to add platform data to key driver (%d)", err);
  		goto err_put_pdev;
+ 	}
 
  	err = platform_device_add(leddev);
- 	if (err)
+ 	if (err) {
+ 		dev_err(&leddev->dev, "failed to register key platform device (%d)", err);
  		goto err_put_pdev;
+ 	}
 
  	return;
 
