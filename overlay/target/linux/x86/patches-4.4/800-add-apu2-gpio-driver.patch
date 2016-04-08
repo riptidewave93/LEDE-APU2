@@ -1,6 +1,6 @@
 --- a/drivers/leds/Kconfig	2015-09-29 18:44:17.804056800 -0400
 +++ b/drivers/leds/Kconfig	2015-09-29 19:21:36.780056800 -0400
-@@ -112,6 +112,15 @@
+@@ -145,6 +145,15 @@
 	help
 	  This option enables support for the PCEngines WRAP programmable LEDs.
 
@@ -18,10 +18,10 @@
 	depends on LEDS_CLASS
 --- a/drivers/leds/Makefile	2015-09-29 18:44:17.892056800 -0400
 +++ b/drivers/leds/Makefile	2015-09-29 19:11:36.572056800 -0400
-@@ -56,6 +56,7 @@
- obj-$(CONFIG_LEDS_SYSCON)		+= leds-syscon.o
- obj-$(CONFIG_LEDS_VERSATILE)		+= leds-versatile.o
- obj-$(CONFIG_LEDS_MENF21BMC)		+= leds-menf21bmc.o
+@@ -68,6 +68,7 @@
+ obj-$(CONFIG_LEDS_KTD2692)		+= leds-ktd2692.o
+ obj-$(CONFIG_LEDS_POWERNV)		+= leds-powernv.o
+ obj-$(CONFIG_LEDS_SEAD3)		+= leds-sead3.o
 +obj-$(CONFIG_LEDS_APU2)			+= leds-apu2.o
 
  # LED SPI Drivers

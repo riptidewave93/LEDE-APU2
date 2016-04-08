@@ -21,7 +21,10 @@ Msg "Starting Build Process!"
 if [ ! -d $clonedir ]; then
   firstbuild=1
   Msg "Cloning Repo..."
-  git clone git://git.openwrt.org/15.05/openwrt.git $clonedir
+  git clone git://git.openwrt.org/openwrt.git $clonedir
+  cd $clonedir
+  git reset --hard ef1e28c670cdbc96f2dd961eb68c07eead73d7de
+  cd - > /dev/null
 fi
 
 

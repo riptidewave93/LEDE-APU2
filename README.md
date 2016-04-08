@@ -2,7 +2,7 @@
 
 Bringup repo for the PC Engines APU2 on OpenWRT!
 
-Currently based on the 15.05.1 OpenWRT CC Release. Note that I have no intentions of merging this upstream, so the code may be a bit rough. Forks/PR's/Feedback is always appreciated!
+Currently based on OpenWRT Nightlies. Note that I have no intentions of merging this upstream, so the code may be a bit rough. Forks/PR's/Feedback is always appreciated!
 
 Building
 -----
