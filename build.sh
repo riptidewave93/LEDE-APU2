@@ -23,7 +23,7 @@ if [ ! -d $clonedir ]; then
   Msg "Cloning Repo..."
   git clone git://git.openwrt.org/openwrt.git $clonedir
   cd $clonedir
-  git reset --hard ef1e28c670cdbc96f2dd961eb68c07eead73d7de
+  git reset --hard 5e500d29121053a6bde118d04ac3e07e83ef67dc
   cd - > /dev/null
 fi
 
@@ -43,9 +43,6 @@ if [ $firstbuild = "1" ]; then
   cd $clonedir
   ./scripts/feeds update -a
   ./scripts/feeds install -a
-  make defconfig
-  make prereq
-  rm ./.config
   cd - > /dev/null
 fi
 
@@ -53,8 +50,6 @@ if [ $modify -eq 1 ]; then
   cd $clonedir
   Msg "Loading OpenWRT Menuconfig"
   make menuconfig -j$cpu_num V=s
-  Msg "Loading Kernel Menuconfig"
-  make kernel_menuconfig -j$cpu_num V=s
   cd - > /dev/null
 fi
 

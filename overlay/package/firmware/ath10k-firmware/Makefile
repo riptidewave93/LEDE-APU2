@@ -8,9 +8,9 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ath10k-firmware
-PKG_SOURCE_VERSION:=1a13f89b60ccbe9815a90da7cd2111b279198be6
-PKG_VERSION:=2016-04-08-$(PKG_SOURCE_VERSION)
-PKG_RELEASE:=2
+PKG_SOURCE_VERSION:=bba07e10c320671371be612ee33e607c18cea0b8
+PKG_VERSION:=2016-05-24-$(PKG_SOURCE_VERSION)
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
@@ -37,12 +37,12 @@ $(Package/ath10k-firmware-default)
   TITLE:=ath10k firmware for QCA988x devices
 endef
 
-QCA988X_FIRMWARE_FILE:=firmware-5.bin_10.2.4.70.37-2
+QCA988X_FIRMWARE_FILE:=firmware-5.bin_10.2.4.70.42-2
 
 define Download/ath10k-firmware-qca988x
   URL:=https://github.com/kvalo/ath10k-firmware/raw/$(PKG_SOURCE_VERSION)/QCA988X/10.2.4/
   FILE:=$(QCA988X_FIRMWARE_FILE)
-  MD5SUM:=e937a600b0b06f26fa9b00d410561acd
+  MD5SUM:=b3f57e96a45b11d8e391168aad423390
 endef
 $(eval $(call Download,ath10k-firmware-qca988x))
 
@@ -61,7 +61,7 @@ QCA99X0_BOARD_FILE:=board-2.bin.$(QCA99X0_BOARD_REV)
 
 define Download/qca99x0-board
   URL:=https://www.codeaurora.org/cgit/quic/qsdk/oss/firmware/ath10k-firmware/plain/ath10k/QCA99X0/hw2.0
-  URL_FILE:=board-2.bin?id=ddcec9efd245da9365c474f513a855a55f3ac7fe
+  URL_FILE:=board-2.bin?id=$(QCA99X0_BOARD_REV)
   FILE:=$(QCA99X0_BOARD_FILE)
   MD5SUM:=a2b3c653c2363a5641200051d6333d0a
 endef
