@@ -1,7 +1,6 @@
 #!/bin/bash
 
 firstbuild=0
-expand=0
 clonedir=./lede
 cpu_num=$(grep -c processor /proc/cpuinfo)
 
@@ -39,21 +38,15 @@ fi
 Msg "Applying overlay..."
 cp -R ./overlay/* $clonedir/
 
-if [ -f "./config/diffconfig" ]; then
-	Msg "Applying config..."
- 	expand=1
-	cp ./config/diffconfig $clonedir/.config
-fi
-
 if [ "$firstbuild" -eq "1" ]; then
   Msg "Installing feeds..."
   cd $clonedir
   ./scripts/feeds update -a
   ./scripts/feeds install -a
-  # Expand config if we copied one over
-  if [ "$expand" -eq 1 ]; then
-	  Msg "Expanding config..."
-	  make defconfig
+  if [ -f "../config/diffconfig" ]; then
+  	Msg "Applying and Expanding config..."
+  	cp ../config/diffconfig ./.config
+  	make defconfig
   fi
   cd - > /dev/null
 fi
