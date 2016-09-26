@@ -20,7 +20,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
- 
+
  #include <linux/module.h>
  #include <linux/types.h>
  #include <linux/miscdevice.h>
@@ -323,7 +323,7 @@
  {
  	int err;
 
- 	pr_info ("load APU-2 GPIO driver module\n");
+ 	pr_info ("load APU-2/LED GPIO driver module\n");
 
  	err = platform_driver_register (&gpio_apu2_driver);
  	if (err)
@@ -335,7 +335,7 @@
  		goto exit_driver;
  	}
 
- 	pr_info ("APU-2 GPIO driver module loaded\n");
+ 	pr_info ("APU-2 GPIO/LED driver module loaded\n");
 
  	register_leds_gpio(-1, ARRAY_SIZE(apu2_leds_gpio), apu2_leds_gpio);
  	register_gpio_keys_polled(-1, 20, ARRAY_SIZE(apu2_gpio_keys), apu2_gpio_keys);
@@ -353,7 +353,7 @@
  	platform_device_unregister (leddev);
  	platform_device_unregister (keydev);
  	platform_driver_unregister (&gpio_apu2_driver);
- 	pr_info ("APU-2 GPIO driver module unloaded\n");
+ 	pr_info ("APU-2 GPIO/LED driver module unloaded\n");
  }
 
  MODULE_AUTHOR ("Carsten Spiess <fli4l at carsten-spiess.de>");

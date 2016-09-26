@@ -8,7 +8,7 @@
 
 get_status_led() {
         case $(x86_board_name) in
-        apu2)
+        pc-engines-apu2)
                 status_led="apu2:green:power"
                 ;;
         esac

@@ -11,7 +11,7 @@ board_config_update
 board=$(x86_board_name)
 
 case "$board" in
-apu2)
+pc-engines-apu2)
 	ucidef_set_led_wlan "wlan1" "WLAN1" "apu2:green:led2" "phy0tpt"
 	ucidef_set_led_wlan "wlan2" "WLAN2" "apu2:green:led3" "phy1tpt"
 	;;

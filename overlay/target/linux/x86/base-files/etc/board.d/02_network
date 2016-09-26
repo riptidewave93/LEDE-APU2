@@ -12,7 +12,7 @@ board_config_update
 board=$(x86_board_name)
 
 case "$board" in
-apu2)
+pc-engines-apu2)
 	ucidef_set_interfaces_lan_wan "eth1" "eth0"
 	;;
 *)

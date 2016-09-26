@@ -1,7 +1,8 @@
 #!/bin/bash
 
 firstbuild=0
-clonedir=./openwrt
+expand=0
+clonedir=./lede
 cpu_num=$(grep -c processor /proc/cpuinfo)
 
 # Print messages in cyan blue
@@ -18,14 +19,17 @@ fi
 
 Msg "Starting Build Process!"
 
-if [ ! -d $clonedir ]; then
+if [ ! -d "$clonedir" ]; then
   firstbuild=1
   Msg "Cloning Repo..."
-  git clone git://git.openwrt.org/15.05/openwrt.git $clonedir
+  git clone https://github.com/lede-project/source $clonedir
+  cd $clonedir
+  git reset --hard 175fbe4d4ec4978ff1341f24ce3811d673c91a85
+  cd - > /dev/null
 fi
 
 
-if [ $firstbuild = "0" ]; then
+if [ "$firstbuild" -eq "0" ]; then
   Msg "Cleaning Builddir..."
   cd $clonedir
   rm -rf ./bin
@@ -35,23 +39,29 @@ fi
 Msg "Applying overlay..."
 cp -R ./overlay/* $clonedir/
 
-if [ $firstbuild = "1" ]; then
-  Msg "Running first build configurations..."
+if [ -f "./config/diffconfig" ]; then
+	Msg "Applying config..."
+ 	expand=1
+	cp ./config/diffconfig $clonedir/.config
+fi
+
+if [ "$firstbuild" -eq "1" ]; then
+  Msg "Installing feeds..."
   cd $clonedir
   ./scripts/feeds update -a
   ./scripts/feeds install -a
-  make defconfig
-  make prereq
-  rm ./.config
+  # Expand config if we copied one over
+  if [ "$expand" -eq 1 ]; then
+	  Msg "Expanding config..."
+	  make defconfig
+  fi
   cd - > /dev/null
 fi
 
-if [ $modify -eq 1 ]; then
+if [ "$modify" -eq "1" ]; then
   cd $clonedir
-  Msg "Loading OpenWRT Menuconfig"
+  Msg "Loading Menuconfig"
   make menuconfig -j$cpu_num V=s
-  Msg "Loading Kernel Menuconfig"
-  make kernel_menuconfig -j$cpu_num V=s
   cd - > /dev/null
 fi
 
