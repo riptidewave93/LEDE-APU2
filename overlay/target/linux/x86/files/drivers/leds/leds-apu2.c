@@ -32,6 +32,7 @@
  #include <linux/uaccess.h>
  #include <linux/io.h>
  #include <linux/version.h>
+ #include <linux/dmi.h>
 
  #include <linux/leds.h>
  #include <linux/input.h>
@@ -157,6 +158,12 @@
  	int i;
  	struct pci_dev *pci_dev = NULL;
 
+	/* Match the device name/model */
+	if (!dmi_match(DMI_BOARD_VENDOR, "PC Engines") || !dmi_match(DMI_BOARD_NAME, "APU2")) {
+		pr_err ("%s: APU2 board not detected! Found: %s %s\n", DEVNAME, DMI_BOARD_VENDOR, DMI_BOARD_NAME);
+		return -EACCES;
+	}
+
  	/* Match the PCI device */
  	for_each_pci_dev (pci_dev) {
  		if (pci_match_id (gpio_apu2_pci_tbl, pci_dev) != NULL) {
@@ -168,7 +175,7 @@
  	if (!gpio_apu2_pci)
  		return -ENODEV;
 
- 	pr_info ("PCI Revision ID: 0x%x\n", gpio_apu2_pci->revision);
+ 	pr_info ("%s: PCI Revision ID: 0x%x\n", DEVNAME, gpio_apu2_pci->revision);
 
  	/* Determine type of southbridge chipset */
  	if (gpio_apu2_pci->revision < 0x40) {
@@ -178,7 +185,7 @@
  	/* Request memory region for GPIO's */
  	if (!devm_request_mem_region (&dev->dev, FCH_GPIO_BASE,
  		FCH_GPIO_SIZE, DEVNAME)){
- 		pr_err ("request GPIO mem region failed\n");
+ 		pr_err ("%s: request GPIO mem region failed\n", DEVNAME);
  		return -ENXIO;
  	}
 
@@ -187,7 +194,7 @@
  		gpio_addr[i] = devm_ioremap (&dev->dev,
  			FCH_GPIO_BASE + (gpio_offset[i] * sizeof (u32)), sizeof (u32));
  		if (!gpio_addr[i]) {
- 			pr_err ("map GPIO%d address failed\n", gpio_offset[i]);
+ 			pr_err ("%s: map GPIO%d address failed\n", DEVNAME, gpio_offset[i]);
  			return -ENXIO;
  		}
  	}
@@ -195,7 +202,7 @@
  	gpio_apu2_chip.dev = &dev->dev;
  	ret = gpiochip_add (&gpio_apu2_chip);
  	if (ret) {
- 		pr_err ("adding gpiochip failed\n");
+ 		pr_err ("%s: adding gpiochip failed\n", DEVNAME);
  	}
 
  	return ret;
@@ -323,7 +330,7 @@
  {
  	int err;
 
- 	pr_info ("load APU-2/LED GPIO driver module\n");
+ 	pr_info ("%s: load APU2/LED GPIO driver module\n", DEVNAME);
 
  	err = platform_driver_register (&gpio_apu2_driver);
  	if (err)
@@ -335,7 +342,7 @@
  		goto exit_driver;
  	}
 
- 	pr_info ("APU-2 GPIO/LED driver module loaded\n");
+ 	pr_info ("%s: APU2 GPIO/LED driver module loaded\n", DEVNAME);
 
  	register_leds_gpio(-1, ARRAY_SIZE(apu2_leds_gpio), apu2_leds_gpio);
  	register_gpio_keys_polled(-1, 20, ARRAY_SIZE(apu2_gpio_keys), apu2_gpio_keys);
@@ -353,7 +360,7 @@
  	platform_device_unregister (leddev);
  	platform_device_unregister (keydev);
  	platform_driver_unregister (&gpio_apu2_driver);
- 	pr_info ("APU-2 GPIO/LED driver module unloaded\n");
+ 	pr_info ("%s: APU2 GPIO/LED driver module unloaded\n", DEVNAME);
  }
 
  MODULE_AUTHOR ("Carsten Spiess <fli4l at carsten-spiess.de>");
