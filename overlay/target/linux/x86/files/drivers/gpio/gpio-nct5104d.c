@@ -1,5 +1,5 @@
 /*
- * GPIO driver for NCT5104D 
+ * GPIO driver for NCT5104D
  *
  * Author: Tasanakorn Phaipool <tasanakorn@gmail.com>
  *
@@ -430,4 +430,3 @@ module_exit(nct5104d_gpio_exit);
 MODULE_DESCRIPTION("GPIO driver for Super-I/O chips NCT5104D");
 MODULE_AUTHOR("Tasanakorn Phaipool <tasanakorn@gmail.com>");
 MODULE_LICENSE("GPL");
-

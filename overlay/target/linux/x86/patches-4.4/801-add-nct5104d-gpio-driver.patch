@@ -5,7 +5,7 @@
  	select GENERIC_IRQ_CHIP
 
 +config GPIO_NCT5104D
-+	bool "NCT5104D GPIO support"
++	tristate "NCT5104D GPIO support"
 +	depends on X86 # unconditional access to IO space.
 +	select GPIO_GENERIC
 +   help

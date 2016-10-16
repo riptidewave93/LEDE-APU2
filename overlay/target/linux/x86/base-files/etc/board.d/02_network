@@ -14,6 +14,7 @@ board=$(x86_board_name)
 case "$board" in
 pc-engines-apu2)
 	ucidef_set_interfaces_lan_wan "eth1" "eth0"
+	ucidef_set_interface_raw "opt" "eth2"
 	;;
 *)
 	ucidef_set_interfaces_lan_wan "eth1" "eth0"
