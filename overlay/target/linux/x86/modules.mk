@@ -5,21 +5,6 @@
 # See /LICENSE for more information.
 #
 
-define KernelPackage/sp5100_tco
-  SUBMENU:=$(OTHER_MENU)
-  TITLE:=SP5100 Watchdog Support
-  DEPENDS:=@TARGET_x86
-  KCONFIG:=CONFIG_SP5100_TCO
-  FILES:=$(LINUX_DIR)/drivers/watchdog/sp5100_tco.ko
-  AUTOLOAD:=$(call AutoLoad,50,sp5100_tco,1)
-endef
-
-define KernelPackage/sp5100_tco/description
- Kernel module for the SP5100_TCO hardware watchdog.
-endef
-
-$(eval $(call KernelPackage,sp5100_tco))
-
 define KernelPackage/gpio-nct5104d
   SUBMENU:=$(OTHER_MENU)
   TITLE:=nct5104d GPIO Support
@@ -34,3 +19,18 @@ define KernelPackage/gpio-nct5104d/description
 endef
 
 $(eval $(call KernelPackage,gpio-nct5104d))
+
+define KernelPackage/sp5100_tco
+  SUBMENU:=$(OTHER_MENU)
+  TITLE:=SP5100 Watchdog Support
+  DEPENDS:=@TARGET_x86
+  KCONFIG:=CONFIG_SP5100_TCO
+  FILES:=$(LINUX_DIR)/drivers/watchdog/sp5100_tco.ko
+  AUTOLOAD:=$(call AutoLoad,50,sp5100_tco,1)
+endef
+
+define KernelPackage/sp5100_tco/description
+ Kernel module for the SP5100_TCO hardware watchdog.
+endef
+
+$(eval $(call KernelPackage,sp5100_tco))

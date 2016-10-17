@@ -1,0 +1,28 @@
+#!/bin/sh
+
+. /lib/functions.sh
+
+case "$ACTION" in
+pressed)
+	return 5
+;;
+timeout)
+	. /etc/diag.sh
+	set_state failsafe
+;;
+released)
+	OVERLAY="$(cat /proc/mounts | grep '/overlay' | head -1 | awk '{ print $3 }' 2>/dev/null)"
+	if [ "$SEEN" -gt 5 -a -n "$OVERLAY" ]
+	then
+		echo "FACTORY RESET" > /dev/console
+		jffs2reset -y && reboot &
+	elif [ "$SEEN" ]
+	then
+		echo "REBOOT" > /dev/console
+		sync
+		reboot
+	fi
+;;
+esac
+
+return 0
