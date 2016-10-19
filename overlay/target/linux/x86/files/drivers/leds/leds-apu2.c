@@ -33,6 +33,7 @@
  #include <linux/io.h>
  #include <linux/version.h>
  #include <linux/dmi.h>
+ #include <linux/string.h>
 
  #include <linux/leds.h>
  #include <linux/input.h>
@@ -52,7 +53,7 @@
 
  /* internal variables */
  static struct pci_dev *gpio_apu2_pci;
- static DEFINE_SPINLOCK ( gpio_lock);
+ static DEFINE_SPINLOCK (gpio_lock);
 
  /* the watchdog platform device */
  static struct platform_device *gpio_apu2_platform_device;
@@ -63,7 +64,7 @@
  	{PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_HUDSON2_SMBUS, PCI_ANY_ID, PCI_ANY_ID},
  	{ 0, } /* End of list */
  };
- MODULE_DEVICE_TABLE ( pci, gpio_apu2_pci_tbl);
+ MODULE_DEVICE_TABLE (pci, gpio_apu2_pci_tbl);
 
  /* EGPIO89=GPIO32, AGPIO68=GPIO57, AGPIO69=GPIO58, AGPIO70=GPIO59 */
  static u8 gpio_offset[APU_NUM_GPIO] = {89, 68, 69, 70};
@@ -157,11 +158,13 @@
  	int ret = 0;
  	int i;
  	struct pci_dev *pci_dev = NULL;
+	const char *board_vendor = dmi_get_system_info(DMI_BOARD_VENDOR);
+	const char *board_name = dmi_get_system_info(DMI_BOARD_NAME);
 
 	/* Match the device name/model */
-	if (!dmi_match(DMI_BOARD_VENDOR, "PC Engines") || !dmi_match(DMI_BOARD_NAME, "APU2")) {
-		pr_err ("%s: APU2 board not detected! Found: %s %s\n", DEVNAME, DMI_BOARD_VENDOR, DMI_BOARD_NAME);
-		return -EACCES;
+	if (strcmp(board_vendor, "PC Engines") || strcasecmp(board_name, "apu2")) {
+		pr_err ("%s: APU2 board not detected! Found: %s %s\n", DEVNAME, board_vendor, board_name);
+		return -ENODEV;
 	}
 
  	/* Match the PCI device */
