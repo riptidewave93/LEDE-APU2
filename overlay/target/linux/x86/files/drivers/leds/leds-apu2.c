@@ -158,14 +158,6 @@
  	int ret = 0;
  	int i;
  	struct pci_dev *pci_dev = NULL;
-	const char *board_vendor = dmi_get_system_info(DMI_BOARD_VENDOR);
-	const char *board_name = dmi_get_system_info(DMI_BOARD_NAME);
-
-	/* Match the device name/model */
-	if (strcmp(board_vendor, "PC Engines") || strcasecmp(board_name, "apu2")) {
-		pr_err ("%s: APU2 board not detected! Found: %s %s\n", DEVNAME, board_vendor, board_name);
-		return -ENODEV;
-	}
 
  	/* Match the PCI device */
  	for_each_pci_dev (pci_dev) {
@@ -332,8 +324,17 @@
  static int __init gpio_apu2_init (void)
  {
  	int err;
+	const char *board_vendor = dmi_get_system_info(DMI_BOARD_VENDOR);
+	const char *board_name = dmi_get_system_info(DMI_BOARD_NAME);
 
- 	pr_info ("%s: load APU2/LED GPIO driver module\n", DEVNAME);
+ 		/* Match the device name/model */
+	if (strcmp(board_vendor, "PC Engines") || strcasecmp(board_name, "apu2")) {
+		pr_notice ("%s: APU2 board not detected! Found: %s %s\n", DEVNAME, board_vendor, board_name);
+		err = -ENODEV;
+		goto exit;
+	}
+
+	pr_info ("%s: load APU2/LED GPIO driver module\n", DEVNAME);
 
  	err = platform_driver_register (&gpio_apu2_driver);
  	if (err)
