@@ -327,9 +327,8 @@
 	const char *board_vendor = dmi_get_system_info(DMI_BOARD_VENDOR);
 	const char *board_name = dmi_get_system_info(DMI_BOARD_NAME);
 
- 		/* Match the device name/model */
-	if (strcmp(board_vendor, "PC Engines") || strcasecmp(board_name, "apu2")) {
-		pr_notice ("%s: APU2 board not detected! Found: %s %s\n", DEVNAME, board_vendor, board_name);
+ 	/* Match the device name/model */
+	if (!board_name || !board_vendor || strcmp(board_vendor, "PC Engines") || strcasecmp(board_name, "apu2")) {
 		err = -ENODEV;
 		goto exit;
 	}

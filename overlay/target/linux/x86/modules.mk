@@ -15,7 +15,7 @@ define KernelPackage/gpio-nct5104d
 endef
 
 define KernelPackage/gpio-nct5104d/description
- Kernel module for the nct5104d Super I/O chip.
+ Kernel module for the nct5104d Super I/O chip on PC Engine APU boards.
 endef
 
 $(eval $(call KernelPackage,gpio-nct5104d))
