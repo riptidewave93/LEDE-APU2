@@ -32,6 +32,7 @@ if [ "$firstbuild" -eq "0" ]; then
   Msg "Cleaning Builddir..."
   cd $clonedir
   rm -rf ./bin
+  make clean
   cd - > /dev/null
 fi
 
