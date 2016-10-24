@@ -1,6 +1,6 @@
 --- a/drivers/gpio/Kconfig	2016-09-15 01:29:29.000000000 -0500
 +++ b/drivers/gpio/Kconfig	2016-09-26 02:29:15.714674624 -0500
-@@ -307,6 +307,13 @@
+@@ -307,6 +307,14 @@
  	select GPIO_GENERIC
  	select GENERIC_IRQ_CHIP
 
@@ -9,7 +9,8 @@
 +	depends on X86 # unconditional access to IO space.
 +	select GPIO_GENERIC
 +   help
-+     Say yes here to support GPIO functionality of NCT5104D super I/O chip.
++     Say yes here to support GPIO functionality of NCT5104D super I/O chip on
++     PC Engine APU boards.
 +
  config GPIO_OCTEON
  	tristate "Cavium OCTEON GPIO"
