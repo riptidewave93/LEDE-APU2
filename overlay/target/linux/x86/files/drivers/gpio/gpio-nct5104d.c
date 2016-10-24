@@ -14,6 +14,8 @@
 #include <linux/platform_device.h>
 #include <linux/io.h>
 #include <linux/gpio.h>
+#include <linux/dmi.h>
+#include <linux/string.h>
 
 #define DRVNAME "gpio-nct5104d"
 
@@ -403,6 +405,13 @@ static int __init nct5104d_gpio_init(void)
 {
 	int err;
 	struct nct5104d_sio sio;
+	const char *board_vendor = dmi_get_system_info(DMI_BOARD_VENDOR);
+	const char *board_name = dmi_get_system_info(DMI_BOARD_NAME);
+
+ 	/* Make sure we only run on PC Engine APU boards */
+	if (!board_name || !board_vendor || strcasecmp(board_vendor, "PC Engines") || strncasecmp(board_name, "apu", 3)) {
+		return -ENODEV;
+	}
 
 	if (nct5104d_find(0x2e, &sio) &&
 	    nct5104d_find(0x4e, &sio))

@@ -39,7 +39,7 @@
  #include <linux/input.h>
  #include <linux/gpio_keys.h>
 
- #define DEVNAME                 "gpio-apu2"
+ #define DEVNAME                 "leds-apu2"
 
  #define FCH_ACPI_MMIO_BASE      0xFED80000
  #define FCH_GPIO_BASE           (FCH_ACPI_MMIO_BASE + 0x1500)
@@ -328,7 +328,7 @@
 	const char *board_name = dmi_get_system_info(DMI_BOARD_NAME);
 
  	/* Match the device name/model */
-	if (!board_name || !board_vendor || strcmp(board_vendor, "PC Engines") || strcasecmp(board_name, "apu2")) {
+	if (!board_name || !board_vendor || strcasecmp(board_vendor, "PC Engines") || strcasecmp(board_name, "apu2")) {
 		err = -ENODEV;
 		goto exit;
 	}
