@@ -1,0 +1,15 @@
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -5139,10 +5139,10 @@ static struct rtnl_link_stats64 *igb_get
+ {
+ 	struct igb_adapter *adapter = netdev_priv(netdev);
+
+-	spin_lock(&adapter->stats64_lock);
++	spin_lock_bh(&adapter->stats64_lock);
+ 	igb_update_stats(adapter, &adapter->stats64);
+ 	memcpy(stats, &adapter->stats64, sizeof(*stats));
+-	spin_unlock(&adapter->stats64_lock);
++	spin_unlock_bh(&adapter->stats64_lock);
+
+ 	return stats;
+ }
