@@ -11,9 +11,9 @@ board_config_update
 board=$(x86_board_name)
 
 case "$board" in
-pc-engines-apu2)
-	ucidef_set_led_wlan "wlan0" "WLAN0" "apu2:green:led2" "phy0tpt"
-	ucidef_set_led_wlan "wlan1" "WLAN1" "apu2:green:led3" "phy1tpt"
+pc-engines-apu2
+	ucidef_set_led_netdev "wan" "WAN" "apu2:green:led3" "eth0"
+	ucidef_set_led_netdev "lan" "LAN" "apu2:green:led2" "eth1"
 	;;
 esac
 
