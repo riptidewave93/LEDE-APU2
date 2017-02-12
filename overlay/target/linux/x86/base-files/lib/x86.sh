@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (C) 2016 OpenWrt.org
+# Copyright (C) 2017 OpenWrt.org
 #
 
 x86_board_name() {
