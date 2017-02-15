@@ -2,7 +2,7 @@
 
 Bringup repo for the PC Engines APU2 on LEDE!
 
-Currently based on LEDE Nightlies. Note that I have no intentions of merging this upstream, so the code may be a bit rough. Forks/PR's/Feedback is always appreciated!
+Currently based on LEDE Nightlies. This is the bringup repo to show the progress of porting upstream. Note that builds MAY FAIL using this branch, so usage of Master is recommend instead.
 
 Building
 -----
